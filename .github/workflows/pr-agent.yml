@@ -6,10 +6,7 @@ on:
 
 jobs:
   pr_agent_job:
-    if: >
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/')
-
+    if: github.event.issue.pull_request
     runs-on: ubuntu-latest
 
     permissions:
@@ -20,14 +17,13 @@ jobs:
     steps:
       - name: Run PR Agent
         run: |
+          COMMAND=$(echo "${{ github.event.comment.body }}" | cut -d' ' -f1 | tr -d '/')
+
           docker run --rm \
             -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
             -e OPENAI_KEY="${{ secrets.OPENROUTER_API_KEY }}" \
             -e OPENAI_API_BASE="https://openrouter.ai/api/v1" \
-            -e CONFIG_MODEL="anthropic/claude-3.5-sonnet" \
-            -e GITHUB_EVENT_PATH="${{ github.event_path }}" \
-            -e GITHUB_EVENT_NAME="${{ github.event_name }}" \
-            -e GITHUB_REPOSITORY="${{ github.repository }}" \
-            -e GITHUB_RUN_ID="${{ github.run_id }}" \
-            -v "${{ github.workspace }}:/github/workspace" \
-            codiumai/pr-agent:latest github_action
+            -e OPENAI_MODEL="anthropic/claude-3.5-sonnet" \
+            codiumai/pr-agent:latest \
+            --pr_url="https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }}" \
+            $COMMAND
