@@ -1,0 +1,24 @@
+name: PR Agent
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+  issue_comment:
+
+jobs:
+  pr_agent_job:
+    if: ${{ github.event.sender.type != 'Bot' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+
+    steps:
+      - name: PR Agent
+        uses: docker://codiumai/pr-agent:latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI.KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI.API_BASE: https://openrouter.ai/api/v1
+          config.model: openrouter/anthropic/claude-3.5-sonnet
