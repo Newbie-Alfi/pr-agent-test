@@ -27,5 +27,7 @@ jobs:
             -e CONFIG_MODEL="anthropic/claude-3.5-sonnet" \
             -e GITHUB_EVENT_PATH="${{ github.event_path }}" \
             -e GITHUB_EVENT_NAME="${{ github.event_name }}" \
+            -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            -e GITHUB_RUN_ID="${{ github.run_id }}" \
             -v "${{ github.workspace }}:/github/workspace" \
-            codiumai/pr-agent:latest
+            codiumai/pr-agent:latest github_action
