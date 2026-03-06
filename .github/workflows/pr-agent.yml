@@ -1,13 +1,15 @@
 name: PR Agent
 
 on:
-  pull_request:
-    types: [opened, reopened, ready_for_review]
   issue_comment:
+    types: [created]
 
 jobs:
   pr_agent_job:
-    if: ${{ github.event.sender.type != 'Bot' }}
+    if: >
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/')
+
     runs-on: ubuntu-latest
 
     permissions:
@@ -22,10 +24,8 @@ jobs:
             -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
             -e OPENAI_KEY="${{ secrets.OPENROUTER_API_KEY }}" \
             -e OPENAI_API_BASE="https://openrouter.ai/api/v1" \
-            -e CONFIG_MODEL="openrouter/anthropic/claude-3.5-sonnet" \
+            -e CONFIG_MODEL="anthropic/claude-3.5-sonnet" \
+            -e GITHUB_EVENT_PATH="${{ github.event_path }}" \
             -e GITHUB_EVENT_NAME="${{ github.event_name }}" \
-            -e GITHUB_EVENT_PATH="/github/workflow/event.json" \
             -v "${{ github.workspace }}:/github/workspace" \
-            -v "${{ github.event_path }}:/github/workflow/event.json" \
-            codiumai/pr-agent:latest \
-            python -m pr_agent.cli
+            codiumai/pr-agent:latest
