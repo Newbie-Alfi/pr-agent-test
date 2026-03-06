@@ -1,29 +1,21 @@
 name: PR Agent
-
 on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
   issue_comment:
-    types: [created]
-
 jobs:
   pr_agent_job:
-    if: github.event.issue.pull_request
+    if: ${{ github.event.sender.type != 'Bot' }}
     runs-on: ubuntu-latest
-
     permissions:
       issues: write
       pull-requests: write
-      contents: read
-
+      contents: write
     steps:
-      - name: Run PR Agent
-        run: |
-          COMMAND=$(echo "${{ github.event.comment.body }}" | cut -d' ' -f1 | tr -d '/')
-
-          docker run --rm \
-            -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
-            -e OPENAI_KEY="${{ secrets.OPENROUTER_API_KEY }}" \
-            -e OPENAI_API_BASE="https://openrouter.ai/api/v1" \
-            -e OPENAI_MODEL="anthropic/claude-3.5-sonnet" \
-            codiumai/pr-agent:latest \
-            --pr_url="https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }}" \
-            $COMMAND
+      - name: PR Agent action step
+        uses: qodo-ai/pr-agent@main
+        env:
+          OPENAI_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_BASE: https://openrouter.ai/api/v1
+          OPENAI_MODEL: anthropic/claude-3.5-sonnet
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
