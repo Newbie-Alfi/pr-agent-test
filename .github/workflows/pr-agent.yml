@@ -23,3 +23,4 @@ jobs:
           OPENAI_API_BASE: https://openrouter.ai/api/v1
           OPENAI_MODEL: openrouter/sourceful/riverflow-v2-pro
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENROUTER__KEY: ${{ secrets.OPENAI_KEY }}
