@@ -1,4 +1,4 @@
 [config]
-model = "openrouter/sourceful/riverflow-v2-pro"
-fallback_models = []
-custom_model_max_tokens = 8192
+model = "openrouter/qwen/qwen3-coder:free"
+fallback_models = ["openrouter/stepfun/step-3.5-flash:free"]
+custom_model_max_tokens = 262000

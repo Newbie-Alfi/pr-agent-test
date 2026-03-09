@@ -12,6 +12,10 @@ jobs:
       pull-requests: write
       contents: write
     steps:
+      - name: Debug
+        run: echo "key_length=${#OPENAI_KEY}"
+        env:
+          OPENAI_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       - name: PR Agent action step
         uses: qodo-ai/pr-agent@main
         env:
