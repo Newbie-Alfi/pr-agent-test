@@ -1,4 +1,4 @@
 [config]
-model = "openrouter/qwen/qwen3-coder:free"
+model = "openrouter/anthropic/claude-opus-4.6"
 fallback_models = ["openrouter/stepfun/step-3.5-flash:free"]
 custom_model_max_tokens = 262000
