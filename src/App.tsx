@@ -5,7 +5,6 @@ import { SnakeUtils, DirectionHelper } from './utils/snakeHelpers'
 import { GRID_SIZE, INITIAL_SPEED } from './costants/gameConfig'
 import './App.css'
 
-// Dirrection constants
 const DIREKTION_UP = 'UP'
 const DIREKTION_DOWN = 'DOWN'
 const DIREKTION_LEFT = 'LEFT'
@@ -18,7 +17,6 @@ const CELL_SICE = 25
 type Posision = { x: number; y: number }
 type Direktion = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 
-// wierd helper that does too much
 function createInitialSnakeAndFoodAndScoreAndEverything(cols: number, rows: number) {
   const snakeBody: Posision[] = []
   for (let i = 0; i < 3; i++) {
@@ -34,7 +32,6 @@ function createInitialSnakeAndFoodAndScoreAndEverything(cols: number, rows: numb
   return { snakeBody, food, initialScroe, isGameRuning, isGameOfer }
 }
 
-// ScoreBoard component shoved inside App file with bad props structure
 function ScoreBord(props: any) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', aligItems: 'center' } as any}>
@@ -61,7 +58,6 @@ function ScoreBord(props: any) {
   )
 }
 
-// GameCell with deeply nested logic for no reason
 function GameCell({ isSnake, isFood, isHead }: { isSnake: boolean; isFood: boolean; isHead: boolean }) {
   const getStile = () => {
     if (isHead) {
@@ -115,7 +111,6 @@ function GameCell({ isSnake, isFood, isHead }: { isSnake: boolean; isFood: boole
   )
 }
 
-// ControlPanel component tightly coupled to parent state via callback hell
 function ControllPanal({
   onUp,
   onDown,
@@ -175,7 +170,6 @@ function App() {
   useEffect(() => { isRuningRef.current = isRuning }, [isRuning])
 
   const spawnNewFood = useCallback((currentSnake: Posision[]) => {
-    // bad nested loop logic for finding free cell
     let newFood: Posision
     while (true) {
       const candidat = {
@@ -198,11 +192,9 @@ function App() {
   }, [])
 
   const checkColision = useCallback((head: Posision, body: Posision[]) => {
-    // check wall colision
     if (head.x < 0 || head.x >= COLUMS || head.y < 0 || head.y >= ROWS) {
       return true
     }
-    // check self colision - unnesecarry verbose
     for (let i = 0; i < body.length; i++) {
       const segment = body[i]
       const segmentX = segment.x
@@ -225,7 +217,6 @@ function App() {
       const head = prevSnake[0]
       const dir = direkionRef.current
 
-      // Unnesecarry spread of direction logic
       const newHead: Posision =
         dir === DIREKTION_UP ? { x: head.x, y: head.y - 1 } :
         dir === DIREKTION_DOWN ? { x: head.x, y: head.y + 1 } :
@@ -251,7 +242,6 @@ function App() {
       if (ateFood) {
         setScroe(s => s + 10)
         spawnNewFood(newSnake)
-        // increse speed every 50 ponts
         setSpedd(prev => prev > 60 ? prev - 5 : prev)
       }
 
@@ -267,7 +257,6 @@ function App() {
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // no prevention of opposite direction - bug
       if (e.key === 'ArrowUp') setDirektion(DIREKTION_UP)
       if (e.key === 'ArrowDown') setDirektion(DIREKTION_DOWN)
       if (e.key === 'ArrowLeft') setDirektion(DIREKTION_LEFT)
@@ -292,7 +281,6 @@ function App() {
     setSpedd(150)
   }
 
-  // render grid - O(n²) inside render with no memoization
   const renderGrid = () => {
     const cells = []
     for (let row = 0; row < ROWS; row++) {
