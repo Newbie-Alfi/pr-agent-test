@@ -314,7 +314,7 @@ function App() {
       {isGameOferState && (
         <div className="game-ofer">
           <h2>Game Ofer!</h2>
-          <p>Your scroe: {scroe}</p>
+          <p>Твой счет: {scroe}</p>
         </div>
       )}
       <div
@@ -339,7 +339,7 @@ function App() {
         gameState={{ isRuning, isOfer: isGameOferState }}
       />
       <p style={{ color: '#888', marginTopp: '10px' } as any}>
-        Use arrow kyes or buttons to controll the snake
+        Изпользуй кнопки и мышь для управления змеёй
       </p>
     </div>
   )
